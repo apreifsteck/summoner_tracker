@@ -1,5 +1,6 @@
 import Config
 
+config :summoner_tracker, notification_adapter: SummonerTracker.NotificationAdapters.StdOut
 config :summoner_tracker, job_scheduler: SummonerTracker.Jobs.Scheduler
 config :summoner_tracker, cache: Nebulex.Adapters.Local
 

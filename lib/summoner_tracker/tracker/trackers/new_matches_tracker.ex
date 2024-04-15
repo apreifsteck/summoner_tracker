@@ -1,4 +1,13 @@
 defmodule SummonerTracker.Tracker.Trackers.NewMatchesTracker do
+  @moduledoc """
+  Tracks a summoners matches. If new matches are found to have been played after old ones,
+  sends a notification that the summoner has completed a match.
+
+  arguments are: 
+  `notification_adapter`: An implementor of `SummonerTracker.NotifiticationAdapter` to determine how to send the message.
+  `previous_match_ids`: a list of match ids that the summoner has participated in in the recent past. 
+  Match IDs recently fetched that are different from this list are considered to be new matches.
+  """
   require Logger
   alias SummonerTracker.Summoner
 

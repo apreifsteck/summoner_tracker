@@ -1,4 +1,4 @@
-defmodule SummonerTracker.NoficationAdapter do
+defmodule SummonerTracker.NotificationAdapter do
   @moduledoc """
   An abstraction around sending any sort of event message to any sort of place.
   Could be a message bus, could be a message to another process, could be a callback url, or
@@ -13,11 +13,11 @@ defmodule SummonerTracker.NoficationAdapter do
 	@callback send(String.t()) :: :ok | {:error, any()}
 end
 
-defmodule SummonerTracker.NoficationAdapters.StdOut do
+defmodule SummonerTracker.NotificationAdapters.StdOut do
   @moduledoc """
   Sends string messages to standard out.
   """
-	@behaviour SummonerTracker.NoficationAdapter
+	@behaviour SummonerTracker.NotificationAdapter
 
   def send(string) do
     IO.puts(string)
@@ -25,7 +25,7 @@ defmodule SummonerTracker.NoficationAdapters.StdOut do
   end
 end
 
-defmodule SummonerTracker.NoficationAdapters.Process do
+defmodule SummonerTracker.NotificationAdapters.Process do
   @moduledoc """
   Sends string messages to the current process. Mostly useful for testing.
   """

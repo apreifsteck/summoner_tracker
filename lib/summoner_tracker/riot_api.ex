@@ -1,10 +1,14 @@
 defmodule SummonerTracker.RiotApi do
+  @moduledoc """
+  A wrapper module around a few of riots API endpoints.
+  Turns out Req handles retries for you if you hit the rate limit. Isn't that nice?
+  """
   use Nebulex.Caching
 
   alias SummonerTracker.{Cache, Error, Match, Summoner}
 
   @doc """
-  Gets a summoner by a `Summoner.SearchQuery`. This can be by account_id, name,
+  Gets a summoner by a `Summoner.SearchQuery`. This can be by puuid, name,
   or other attributes.
   """
   @spec get_summoner(Summoner.SearchQuery.t()) :: {:ok, Summoner.t()} | {:error, Error.t()}
@@ -22,6 +26,7 @@ defmodule SummonerTracker.RiotApi do
   defp do_get_summoner(uri, region) do
     request =
       uri
+      |> URI.encode()
       |> get(api: :account, version: :v1, region: region)
       |> Req.Request.append_response_steps(snake_case_body: &snake_case_body/1)
 
@@ -62,6 +67,9 @@ defmodule SummonerTracker.RiotApi do
     end
   end
 
+  @doc """
+  return a `Match` given it's unique id
+  """
   @decorate cacheable(cache: Cache)
   @spec get_match_by_id(id :: String.t(), region :: String.t()) ::
           {:ok, Match.t()} | {:error, Error.t()}

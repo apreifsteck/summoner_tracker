@@ -1,6 +1,4 @@
 defmodule SummonerTracker.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
   @moduledoc false
 
   use Application
@@ -10,11 +8,10 @@ defmodule SummonerTracker.Application do
     children = [
       {SummonerTracker.Cache, []},
       SummonerTracker.Jobs.Scheduler,
-      {Task.Supervisor, name: SummonerTracker.Jobs.Scheduler.TaskSupervisor}
+      {Task.Supervisor, name: SummonerTracker.Jobs.Scheduler.TaskSupervisor},
+      {Task.Supervisor, name: SummonerTracker.ApiTaskSupervisor}
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: RfcApp.Supervisor]
     Supervisor.start_link(children, opts)
   end

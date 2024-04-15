@@ -33,11 +33,11 @@ defmodule SummonerTracker.RiotApiTest do
 
     test "fetches a list of match ids given a summoner", context do
       expected_match_ids = ~w(
-          "BR1_2922187228"
-          "BR1_2922175461"
-          "BR1_2922157850"
-          "BR1_2922148640"
-          "BR1_2922136701"
+          BR1_2922187228
+          BR1_2922175461
+          BR1_2922157850
+          BR1_2922148640
+          BR1_2922136701
         )
 
       Req.Test.stub(RiotApi, fn conn ->
