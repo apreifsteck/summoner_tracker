@@ -1,4 +1,7 @@
 defmodule SummonerTracker.Match do
+  @moduledoc """
+  A game that's been played in League of Legends
+  """
   use Strukt
 
   @primary_key false

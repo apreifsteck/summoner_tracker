@@ -1,4 +1,8 @@
 defmodule SummonerTracker.Error do
+  @moduledoc """
+  Represents any error that can happen in this toy app.
+  I've found this generic error pattern quite useful in practice.
+  """
   use SummonerTracker.Schema
 
   alias Ecto.Changeset
@@ -15,6 +19,7 @@ defmodule SummonerTracker.Error do
     field(:detail, :string)
   end
 
+  @spec from_changeset(Ecto.Changeset.t()) :: t()
   def from_changeset(%Changeset{valid?: false} = cs) do
     cs
     |> Changeset.traverse_errors(fn {msg, opts} ->

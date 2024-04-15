@@ -3,7 +3,7 @@ defmodule SummonerTracker.Tracker.Trackers.NewMatchesTrackerTest do
   alias SummonerTracker.{RiotApi, Summoner}
   alias SummonerTracker.Tracker.Trackers.NewMatchesTracker
 
-  @notification_adapter SummonerTracker.NoficationAdapters.Process
+  @notification_adapter SummonerTracker.NotificationAdapters.Process
   describe "tracker/3" do
     test "reports when new matches are found" do
       previous_match_ids =

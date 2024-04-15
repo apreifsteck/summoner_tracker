@@ -33,6 +33,7 @@ defmodule SummonerTracker.Tracker do
       Jobs.JobOpts.new!(
         execute_every: interval,
         halt_after: duration,
+        jitter: -4_000..4_000,
         state: initial_state
       )
 

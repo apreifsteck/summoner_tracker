@@ -7,7 +7,7 @@ defmodule SummonerTracker do
 
   @valid_regions ~w(AMERICAS ASIA EUROPE SEA)
   # Y'all with your beefy api keys can probably ratchet up the concurrency. I hit my rate limits pretty fast.
-  @concurrency_opts max_concurrency: 1, timeout: 10_000
+  @concurrency_opts Application.compile_env!(:summoner_tracker, :api_concurrency_opts)
   @notification_adapter Application.compile_env!(:summoner_tracker, :notification_adapter)
   @task_supervisor SummonerTracker.ApiTaskSupervisor
 
@@ -19,7 +19,7 @@ defmodule SummonerTracker do
   @spec get_summoner_opponent_history(name :: String.t(), region :: String.t()) ::
           {:ok, [String.t()]} | {:error, SummonerTracker.Error.t()}
   def get_summoner_opponent_history(name, region) when region in @valid_regions do
-    with {:ok, query} <- Summoner.SearchQuery.from_name(name, region),
+    with {:ok, query} <- Summoner.SearchQuery.from_riot_id(name, region),
          {:ok, summoner} <- RiotApi.get_summoner(query),
          {:ok, match_ids} <- RiotApi.get_last_played_match_ids(summoner, region),
          {:ok, summoners} <- fan_out_match_requests(match_ids, region) do
@@ -53,9 +53,6 @@ defmodule SummonerTracker do
     |> async_stream(&{&1, RiotApi.get_last_played_match_ids(&1, region)})
     |> async_stream_nolink(fn
       {:ok, {summoner, {:ok, match_ids}}} ->
-        # add some jitter so they don't all enqueue at or nearly at the same time
-        :timer.sleep(trunc(:rand.uniform() * 2_000))
-
         Tracker.attach_tracker_for(summoner, region, %{
           notification_adapter: @notification_adapter,
           previous_match_ids: match_ids

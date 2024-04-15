@@ -17,6 +17,7 @@ defmodule SummonerTrackerTest do
   ]
   |> then(&%{puuid: &1})
   # |>
+
   test "returns all the summoners a summoner played in the last X matches" do
     name = "austin#1234"
     region = "AMERICAS"
@@ -37,9 +38,10 @@ defmodule SummonerTrackerTest do
   #            SummonerTracker.get_summoner_opponent_history(name, region)
   # end
 
-  # test "handles bad input" do
-  #   assert_raise(ArgumentError, fn ->
-  #     SummonerTracker.get_summoner_opponent_history(nil, "foo")
-  #   end)
-  # end
+  test "handles bad input" do
+    name = "austin#1234"
+    assert_raise(ArgumentError, fn ->
+      SummonerTracker.get_summoner_opponent_history(name, "foo")
+    end)
+  end
 end

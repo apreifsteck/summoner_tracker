@@ -40,15 +40,16 @@ defmodule SummonerTracker.Jobs.Scheduler do
   @impl GenServer
   def handle_cast({:schedule_job, func, job_opts, prev_job_duration}, _state) do
     if job_opts.halt_at > system_time() do
+      jitter = Enum.random(job_opts.jitter) 
       case job_opts do
         %JobOpts{execute_every: time} when not is_nil(time) ->
           # Attempts to correct for previous job's execution time to
           # stick to the given schedule
-          schedule_in = max(time - prev_job_duration, 0)
+          schedule_in = max((time - prev_job_duration) + jitter, 0)
           Process.send_after(self(), {:start_job, func, job_opts}, schedule_in)
 
         %JobOpts{execute_in: time} when not is_nil(time) ->
-          Process.send_after(self(), {:start_job, func, job_opts}, time)
+          Process.send_after(self(), {:start_job, func, job_opts}, time + jitter)
       end
     end
 
