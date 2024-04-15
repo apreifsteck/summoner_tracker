@@ -8,7 +8,9 @@ defmodule SummonerTracker.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      {SummonerTracker.Cache, []}
+      {SummonerTracker.Cache, []},
+      SummonerTracker.Jobs.Scheduler,
+      {Task.Supervisor, name: SummonerTracker.Jobs.Scheduler.TaskSupervisor}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

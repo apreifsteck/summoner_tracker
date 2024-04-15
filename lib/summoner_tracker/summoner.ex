@@ -8,7 +8,7 @@ defmodule SummonerTracker.Summoner do
   end
 
   def riot_id(%__MODULE__{} = self) do
-    "#{self.game_name}##{self.tag_line}"
+    self.game_name <> "#" <> self.tag_line
   end
 end
 
@@ -28,11 +28,12 @@ defmodule SummonerTracker.Summoner.SearchQuery do
         {:ok, __MODULE__.new!(%{game_name: name, tag_line: tag_line, region: region})}
 
       _ ->
-        {:error, SummonerTracker.Error.new!(%{
-          message: "invalid name",
-          detail: "expected name in form of name#tagline, got: #{name}",
-          type: :validation_error
-        })}
+        {:error,
+         SummonerTracker.Error.new!(%{
+           message: "invalid name",
+           detail: "expected name in form of name#tagline, got: #{name}",
+           type: :validation_error
+         })}
     end
   end
 end

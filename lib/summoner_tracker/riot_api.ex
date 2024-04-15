@@ -9,7 +9,7 @@ defmodule SummonerTracker.RiotApi do
   """
   @spec get_summoner(Summoner.SearchQuery.t()) :: {:ok, Summoner.t()} | {:error, Error.t()}
   def get_summoner(query)
-  
+
   def get_summoner(%Summoner.SearchQuery{puuid: id} = search_query) when not is_nil(id) do
     do_get_summoner("/by-puuid/#{id}", search_query.region)
   end
@@ -43,11 +43,11 @@ defmodule SummonerTracker.RiotApi do
   """
   @spec get_last_played_match_ids(Summoner.t(), integer()) ::
           {:ok, list(String.t())} | {:error, Error.t()}
-  def get_last_played_match_ids(%Summoner{} = summoner, region, number \\ 5) do
+  def get_last_played_match_ids(%Summoner{} = summoner, region, params \\ %{start: 0, count: 5}) do
     request =
       "/by-puuid/#{summoner.puuid}/ids"
       |> URI.new!()
-      |> URI.append_query(URI.encode_query(%{start: 0, count: number}))
+      |> URI.append_query(URI.encode_query(params))
       |> get(api: :match, version: :v5, region: region)
 
     case Req.request(request) do
