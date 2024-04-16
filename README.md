@@ -58,6 +58,6 @@
   - How do we balance rate limit concerns with speed?
     - There's a concurrency knob that you can turn in `config/config.exs` if you have a key with bigger
     rate limits. This, jitter on the job scheduler, and the auto-retries built into Req were enough 
-    to keep the pipeline from failing. At larger scales I would probably like to revisit the current 
+    to keep things running smoothly. At larger scales I would probably like to revisit the current 
     architecture to build in a job pipeline with back pressure.
 
