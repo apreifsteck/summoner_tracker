@@ -4,7 +4,7 @@ defmodule SummonerTracker.Case do
   using do
     quote do
       setup do
-        SummonerTracker.RiotApi.MockAdapter.setup_default_stub()
+        SummonerTracker.RiotApi.MockApi.setup_default_stub()
         :ok
       end
     end

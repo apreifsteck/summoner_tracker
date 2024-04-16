@@ -11,6 +11,7 @@ defmodule SummonerTracker.Error do
     network_error
     downstream_server_error
     validation_error
+    summoner_not_found
   )a
 
   defstruct do

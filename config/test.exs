@@ -6,4 +6,4 @@ config :summoner_tracker,
     retry: false
   ],
   cache: Nebulex.Adapters.Nil,
-  api_concurrency_opts: [max_concurrency: 10, timeout: 10_000]
+  api_concurrency_opts: [max_concurrency: 4, timeout: 10_000]

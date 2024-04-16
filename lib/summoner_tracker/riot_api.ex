@@ -4,6 +4,7 @@ defmodule SummonerTracker.RiotApi do
   Turns out Req handles retries for you if you hit the rate limit. Isn't that nice?
   """
   use Nebulex.Caching
+  @cache_ttl :timer.hours(1)
 
   alias SummonerTracker.{Cache, Error, Match, Summoner}
 
@@ -22,7 +23,7 @@ defmodule SummonerTracker.RiotApi do
     do_get_summoner("/by-riot-id/#{name}/#{tag_line}", search_query.region)
   end
 
-  @decorate cacheable(cache: Cache)
+  @decorate cacheable(cache: Cache, opts: [ttl: @cache_ttl])
   defp do_get_summoner(uri, region) do
     request =
       uri
@@ -35,6 +36,9 @@ defmodule SummonerTracker.RiotApi do
          {:ok, summoner} <- Summoner.new(body) do
       {:ok, summoner}
     else
+      {:ok, %{body: body} = resp} when resp.status == 404 ->
+        {:error, Error.new!(type: :summoner_not_found, detail: inspect(body))}
+
       {:ok, %{body: body}} ->
         {:error, Error.new!(type: :downstream_server_error, detail: inspect(body))}
 
@@ -70,7 +74,7 @@ defmodule SummonerTracker.RiotApi do
   @doc """
   return a `Match` given it's unique id
   """
-  @decorate cacheable(cache: Cache)
+  @decorate cacheable(cache: Cache, opts: [ttl: @cache_ttl])
   @spec get_match_by_id(id :: String.t(), region :: String.t()) ::
           {:ok, Match.t()} | {:error, Error.t()}
   def get_match_by_id(id, region) do
